@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-num_workers = 8
+num_workers = 0
 class Learner(BaseLearner):
     def __init__(self, args):
         super().__init__(args)

@@ -14,7 +14,7 @@ from utils.data_manager import LaionData
 
 # zero shot clip
 
-num_workers = 8
+num_workers = 0
 
 
 class Learner(BaseLearner):
