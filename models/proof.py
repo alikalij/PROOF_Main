@@ -14,7 +14,7 @@ from utils.data_manager import LaionData
 import math
 import matplotlib.pyplot as plt
 import os
-
+import psutil
 
 num_workers = 0
 class Learner(BaseLearner):
@@ -63,6 +63,10 @@ class Learner(BaseLearner):
             self._network.img_prototypes[class_index]=proto
 
     def incremental_train(self, data_manager):
+
+        p=psutil.Process(os.getpid())
+        print("RSS MB:", p.memory_info().rss/1024**2)
+
         self._cur_task += 1
         self._total_classes = self._known_classes + data_manager.get_task_size(self._cur_task)
         
@@ -99,6 +103,10 @@ class Learner(BaseLearner):
             self._network = self._network.module
     
     def _train_proj(self, train_loader, test_loader, train_loader_for_protonet):
+        
+        p=psutil.Process(os.getpid())
+        print("RSS MB:", p.memory_info().rss/1024**2)
+
         self._train_transformer=True
         self._network.to(self._device)
        
@@ -121,6 +129,10 @@ class Learner(BaseLearner):
 
         total_labels = class_to_label[:self._total_classes] # mask all known classes
         for _, epoch in enumerate(prog_bar):
+            
+            p=psutil.Process(os.getpid())
+            print("RSS MB:", p.memory_info().rss/1024**2)   
+            
             self._network.train()
             losses = 0.0
             correct, total = 0, 0
