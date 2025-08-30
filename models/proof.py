@@ -147,7 +147,6 @@ class Learner(BaseLearner):
                 text_feas = text_features / text_features.norm(dim=-1, keepdim=True)
                 image_features = self._network.encode_image(inputs)
                 img_feas = image_features / image_features.norm(dim=-1, keepdim=True) #[bs, dim]
-                
                 image_features, text_features, logit_scale, proto_feas=self._network.forward_transformer(img_feas, text_feas,self._train_transformer)
                 logits = image_features@text_features.T # [bs, allclasses]
 
@@ -202,8 +201,7 @@ class Learner(BaseLearner):
         for i, (_, inputs, targets) in enumerate(loader):
             inputs = inputs.to(self._device)
             with torch.no_grad():
-                # image_features=self._network.encode_image(inputs) todo replace with after code
-                image_features = self._network.encode_image(inputs, normalize=True)
+                image_features=self._network.encode_image(inputs)
                 transf_image_features, transf_text_features, _, proto_feas = self._network.forward_transformer(image_features, text_features,self._train_transformer)
                 outputs = transf_image_features @ transf_text_features.T
                 proto_outputs= transf_image_features @ proto_feas.T
@@ -238,8 +236,7 @@ class Learner(BaseLearner):
         for _, (_, inputs, targets) in enumerate(loader):
             inputs = inputs.to(self._device)
             with torch.no_grad():
-                # image_features=self._network.encode_image(inputs) todo replace with after line code
-                image_features = self._network.encode_image(inputs, normalize=True)
+                image_features=self._network.encode_image(inputs)
                 transf_image_features, transf_text_features, _, proto_feas = self._network.forward_transformer(image_features, text_features,self._train_transformer)
 
                 outputs = transf_image_features @ transf_text_features.T
